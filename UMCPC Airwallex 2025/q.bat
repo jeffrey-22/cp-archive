@@ -1,0 +1,1 @@
+g++ "%1.cpp" -o "%1" -O2 -static -lm -Wl,--stack=1024000000 -std=c++20
