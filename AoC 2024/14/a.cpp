@@ -1,4 +1,4 @@
-// #include <bits/stdc++.h>
+#include <bits/stdc++.h>
 int mapN, mapM;
 std::vector<std::pair<int, int>> pos, vel;
 
@@ -63,36 +63,40 @@ void solvePartTwo() {
     std::vector<long long> qcnt(5, 0);
     int mincomp = INT_MAX;
     int critsec;
-    for (int sec = 0; sec <= 2000; sec++) {
-        std::cout << "Sec = " << sec << std::endl;
+    for (int sec = 0; sec <= 2000000; sec++) {
+        // std::cout << "Sec = " << sec << std::endl;
         grid = std::vector<std::vector<int>> (mapN + 9, std::vector<int>(mapN + 9, 0));
         vis = std::vector<std::vector<int>> (mapN + 9, std::vector<int>(mapN + 9, 0));
+        bool hasOverlap = false;
         for (int id = 0; id < pos.size(); id++) {
             auto [px, py] = pos[id];
             auto [vx, vy] = vel[id];
             px += vx * sec; px %= mapM; px += mapM; px %= mapM;
             py += vy * sec; py %= mapN; py += mapN; py %= mapN;
             grid[py][px]++;
+            if (grid[py][px] >= 2) {hasOverlap = true; break;}
         }
+        if (hasOverlap) continue;
         int ncomp = 0;
         for (int x = 0; x < mapM; x++)
             for (int y = 0; y < mapN; y++)
-                if (grid[y][x]) {
+                if (!vis[y][x] && grid[y][x]) {
                     dfs(x, y);
                     ncomp++;
                 }
-        if (sec == 95) {
-            for (int y = 0; y < mapN; y++) {
-                for (int x = 0; x < mapM; x++)
-                    std::cout << (grid[y][x] == 0 ? '.' : '#');
-                std::cout<<std::endl;
-            }
-        }
         if (ncomp < mincomp) {
             mincomp = ncomp;
             critsec = sec;
         }
-        std::cout << ncomp << std::endl;
+        if (sec == 7569) {
+            for (int x = 0; x < mapM; x++) {
+                for (int y = 0; y < mapN; y++)
+                    std::cout << grid[y][x];
+                std::cout << std::endl;
+            }
+
+        }
+        // std::cout << ncomp << std::endl;
     }
         std::cout << mincomp << " " << critsec << std::endl;
 }
